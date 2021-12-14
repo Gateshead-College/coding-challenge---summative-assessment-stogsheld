@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class MainMenu {
@@ -13,16 +14,16 @@ public class MainMenu {
         this.emp = emp;
         populateStock();
         if (gameStockEmployees.isEmpty()) {
-            startup();
+            mainMenu();
         } else {
             adminMenu();
         }
     }
 
     private void adminMenu() {
-        System.out.println("In the admin menu now");
-        //Add admin options here for next task
-        System.exit(0);
+        System.out.println("Admin menu incomplete, redirecting you to the user menu...");
+        mainMenu();
+        //Add admin options when task requires it
     }
 
     private void populateStock() {
@@ -32,14 +33,15 @@ public class MainMenu {
 
     }
 
-    private void startup() {
-        System.out.println("Welcome to GameStock's Stock System!");
+    private void mainMenu() {
+        System.out.println("Welcome to GameStock's Stock System, " + emp.getForename() + ".");
         System.out.println("Please select your option from the choices below.");
         System.out.println("1 - View stock");
         System.out.println("2 - Add Stock");
         System.out.println("3 - Load previous stock data (NOT WORKING)");
         System.out.println("4 - Save current stock data (NOT WORKING)");
-        System.out.println("5 - Exit");
+        System.out.println("5 - Account Settings");
+        System.out.println("6 - Exit");
         int choice = Integer.parseInt(scn.nextLine());
 
         switch (choice) {
@@ -47,39 +49,15 @@ public class MainMenu {
             case 2 -> addStock();
             case 3 -> readData();           //These don't work yet - couldn't figure out how to read/write
             case 4 -> writeData();          //These don't work yet - couldn't figure out how to read/write
-            case 5 -> System.exit(0);
+            case 5 -> userSettings();
+            case 6 -> System.exit(0);
             default -> System.out.println("Please select a valid option.");
         }
-        startup();
+        mainMenu();
     }
 
-    private void writeData() {
-        System.exit(0);
-    }
 
-    private void readData() {
-        System.exit(0);
-    }
-
-    private void addStock() {
-        System.out.println("Please enter the ID of the game you would like to add:");
-        int addID = Integer.parseInt(new Scanner(System.in).nextLine());
-        System.out.println("Please enter the game's manufacturer:");
-        String addManu = new Scanner(System.in).nextLine();
-        System.out.println("What's the name of the game? (No ABBA games allowed)");
-        String addGame = new Scanner(System.in).nextLine();
-        System.out.println("What's the price?");
-        double addPrice = Double.parseDouble(new Scanner(System.in).nextLine());
-        System.out.println("And how many do we have in stock?");
-        int addQty = Integer.parseInt(new Scanner(System.in).nextLine());
-        games.add(new Game(addID, addManu, addGame, addPrice, addQty));
-        System.out.println("Your game has now been added. Would you like to add another?");
-        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
-            addStock();
-        } else {
-            startup();
-        }
-    }
+    //This is the beginning of the 'View Stock' option
 
     private void displayGames() {
         if (!games.isEmpty()) {
@@ -95,7 +73,7 @@ public class MainMenu {
                 gamesEditMenu(choice);
             }
         }
-        startup();
+        mainMenu();
     }
 
     private void gamesEditMenu(int choice) {
@@ -116,7 +94,6 @@ public class MainMenu {
             default -> System.out.println("Invalid option, please try again");
         }
     }
-
 
     private void deleteDetails(Game i) {
         System.out.println("Are you sure you want to delete the details for " + i.getGameName() + "?");
@@ -250,4 +227,74 @@ public class MainMenu {
             displayGames();
         }
     }
+    //This is the end of the 'View Stock' option
+
+
+    //This is the beginning of the 'Add Stock' option
+    private void addStock() {
+        System.out.println("Please enter the ID of the game you would like to add:");
+        int addID = Integer.parseInt(new Scanner(System.in).nextLine());
+        System.out.println("Please enter the game's manufacturer:");
+        String addManu = new Scanner(System.in).nextLine();
+        System.out.println("What's the name of the game? (No ABBA games allowed)");
+        String addGame = new Scanner(System.in).nextLine();
+        System.out.println("What's the price?");
+        double addPrice = Double.parseDouble(new Scanner(System.in).nextLine());
+        System.out.println("And how many do we have in stock?");
+        int addQty = Integer.parseInt(new Scanner(System.in).nextLine());
+        games.add(new Game(addID, addManu, addGame, addPrice, addQty));
+        System.out.println("Your game has now been added. Would you like to add another?");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            addStock();
+        } else {
+            mainMenu();
+        }
+    }
+
+
+    //Reading and writing data - these don't work yet
+    private void readData() {
+        System.exit(0);
+    }
+
+    private void writeData() {
+        System.exit(0);
+    }
+
+
+    //User Settings menu
+    private void userSettings() {
+        System.out.println("Welcome to user settings. Please select an option below:");
+        System.out.println("1 - Change Password");
+        System.out.println("2 - Main Menu");
+        int choice = Integer.parseInt(scn.nextLine());
+        switch (choice) {
+            case 1:
+                changePassword();
+                break;
+            case 2:
+                mainMenu();
+                break;
+            default:
+                System.out.println("Invalid option, please try again");
+                userSettings();
+                break;
+        }
+    }
+    
+    private void changePassword() {
+        System.out.println("Please enter your new password.");
+        String newPass = new Scanner(System.in).nextLine();
+        System.out.println("Please re-enter your new password.");
+        String newPassConfirm = new Scanner(System.in).nextLine();
+        if (Objects.equals(newPass, newPassConfirm)) {
+            emp.setPassword(newPass);
+            System.out.println("Your password has now been updated.");
+            userSettings();
+        } else {
+            System.out.println("Passwords do not match; try again.");
+            changePassword();
+        }
+    }
+
 }
