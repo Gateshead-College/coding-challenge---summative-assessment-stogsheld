@@ -3,14 +3,26 @@ import java.util.Scanner;
 
 public class MainMenu {
 
+    private ArrayList<Employee> gameStockEmployees;
+    private Employee emp;
     ArrayList<Game> games = new ArrayList<>();
     Scanner scn = new Scanner(System.in);
 
-    public static void main(String[] args) {
-        MainMenu menu = new MainMenu();
-        menu.populateStock();
-        menu.startup();
+    public MainMenu(ArrayList<Employee> gameStockEmployees, Employee emp) {
+        this.gameStockEmployees = gameStockEmployees;
+        this.emp = emp;
+        populateStock();
+        if (gameStockEmployees.isEmpty()) {
+            startup();
+        } else {
+            adminMenu();
+        }
+    }
 
+    private void adminMenu() {
+        System.out.println("In the admin menu now");
+        //Add admin options here for next task
+        System.exit(0);
     }
 
     private void populateStock() {
@@ -25,17 +37,29 @@ public class MainMenu {
         System.out.println("Please select your option from the choices below.");
         System.out.println("1 - View stock");
         System.out.println("2 - Add Stock");
-        System.out.println("3 - Exit");
+        System.out.println("3 - Load previous stock data (NOT WORKING)");
+        System.out.println("4 - Save current stock data (NOT WORKING)");
+        System.out.println("5 - Exit");
         int choice = Integer.parseInt(scn.nextLine());
 
         switch (choice) {
             case 1 -> displayGames();
             case 2 -> addStock();
-            case 3 -> System.exit(0);
+            case 3 -> readData();           //These don't work yet - couldn't figure out how to read/write
+            case 4 -> writeData();          //These don't work yet - couldn't figure out how to read/write
+            case 5 -> System.exit(0);
+            default -> System.out.println("Please select a valid option.");
         }
+        startup();
     }
 
+    private void writeData() {
+        System.exit(0);
+    }
 
+    private void readData() {
+        System.exit(0);
+    }
 
     private void addStock() {
         System.out.println("Please enter the ID of the game you would like to add:");
