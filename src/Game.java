@@ -18,19 +18,39 @@ public class Game {
         return ID;
     }
 
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
     public String getGameManufacturer() {
         return gameManufacturer;
+    }
+
+    public void setGameManufacturer(String gameManufacturer) {
+        this.gameManufacturer = gameManufacturer;
     }
 
     public String getGameName() {
         return gameName;
     }
 
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
+
     public double getGamePrice() {
         return gamePrice;
     }
 
+    public void setGamePrice(double gamePrice) {
+        this.gamePrice = gamePrice;
+    }
+
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
