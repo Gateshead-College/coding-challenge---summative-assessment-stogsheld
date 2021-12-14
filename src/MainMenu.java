@@ -29,16 +29,13 @@ public class MainMenu {
         int choice = Integer.parseInt(scn.nextLine());
 
         switch (choice) {
-            case 1:
-                displayGames();
-                break;
-            case 2:
-                addStock();
-                break;
-            case 3:
-                break;
+            case 1 -> displayGames();
+            case 2 -> addStock();
+            case 3 -> System.exit(0);
         }
     }
+
+
 
     private void addStock() {
         System.out.println("Please enter the ID of the game you would like to add:");
@@ -53,7 +50,7 @@ public class MainMenu {
         int addQty = Integer.parseInt(new Scanner(System.in).nextLine());
         games.add(new Game(addID, addManu, addGame, addPrice, addQty));
         System.out.println("Your game has now been added. Would you like to add another?");
-        if (new Scanner(System.in).nextLine().equalsIgnoreCase("y")) {
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
             addStock();
         } else {
             startup();
@@ -146,9 +143,10 @@ public class MainMenu {
         }
         System.out.println("Quantity available has now been updated to " + newQty);
         System.out.println("Would you like to edit more game details?");
-        if (new Scanner(System.in).nextLine().equalsIgnoreCase("y")) {
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
             editDetails(i);
         } else {
+            System.out.println("Returning you to the stock menu");
             displayGames();
         }
     }
@@ -162,11 +160,12 @@ public class MainMenu {
         if (checkID == i.getID()) {
             i.setGamePrice(Integer.parseInt(newPrice));
         }
-        System.out.println("Quantity available has now been updated to " + newPrice);
-        System.out.println("Would you like to edit more game details?");
-        if (new Scanner(System.in).nextLine().equalsIgnoreCase("y")) {
+        System.out.println("Price has now been updated to " + newPrice);
+        System.out.println("Would you like to edit more game details? (yes/no)");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
             editDetails(i);
         } else {
+            System.out.println("Returning you to the stock menu");
             displayGames();
         }
     }
@@ -180,11 +179,13 @@ public class MainMenu {
         if (checkID == i.getID()) {
             i.setGameName(newName);
         }
-        System.out.println("Quantity available has now been updated to " + newName);
+        System.out.println("Name has now been updated to " + newName);
         System.out.println("Would you like to edit more game details?");
-        if (new Scanner(System.in).nextLine().equalsIgnoreCase("y")) {
+        System.out.println("Would you like to edit more game details? (yes/no)");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
             editDetails(i);
         } else {
+            System.out.println("Returning you to the stock menu");
             displayGames();
         }
     }
@@ -193,16 +194,17 @@ public class MainMenu {
         System.out.println("The current value is " + i.getGameManufacturer());
         System.out.println("Please enter the new value.");
         String newManu = new Scanner(System.in).nextLine();
-        System.out.println("Are you sure you want to replace " + i.getGameManufacturer() + "with " + newManu + "? Please enter the game's ID to confirm.");
+        System.out.println("Are you sure you want to replace " + i.getGameManufacturer() + " with " + newManu + "? Please enter the game's ID to confirm.");
         int checkID = Integer.parseInt(scn.nextLine());
         if (checkID == i.getID()) {
             i.setGameManufacturer(newManu);
         }
-        System.out.println("Quantity available has now been updated to " + newManu);
+        System.out.println("Manufacturer has now been updated to " + newManu);
         System.out.println("Would you like to edit more game details?");
-        if (new Scanner(System.in).nextLine().equalsIgnoreCase("y")) {
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
             editDetails(i);
         } else {
+            System.out.println("Returning you to the stock menu");
             displayGames();
         }
     }
@@ -211,16 +213,16 @@ public class MainMenu {
         System.out.println("The current value is " + i.getID());
         System.out.println("Please enter the new value.");
         String newID = new Scanner(System.in).nextLine();
-        System.out.println("Are you sure you want to replace " + i.getID() + "with " + newID + "? Please enter the game's ID to confirm.");
-        int checkID = Integer.parseInt(scn.nextLine());
-        if (checkID == i.getID()) {
+        System.out.println("Are you sure you want to replace " + i.getID() + " with " + newID + "?");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
             i.setID(Integer.parseInt(newID));
         }
-        System.out.println("Quantity available has now been updated to " + newID);
-        System.out.println("Would you like to edit more game details?");
-        if (new Scanner(System.in).nextLine().equalsIgnoreCase("y")) {
+        System.out.println("Game ID has now been updated to " + newID);
+        System.out.println("Would you like to edit more game details? (yes/no)");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
             editDetails(i);
         } else {
+            System.out.println("Returning you to the stock menu");
             displayGames();
         }
     }
