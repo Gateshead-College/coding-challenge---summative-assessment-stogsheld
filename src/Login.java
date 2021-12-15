@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class Login {
 
-    ArrayList<Employee> gameStockEmployees = new ArrayList<>();
+    ArrayList<Employee> emps = new ArrayList<>();
 
     public static void main(String[] args) {
         Login log = new Login();
@@ -11,8 +11,10 @@ public class Login {
         log.login();
     }
 
-    private void populateEmployees() {
-        gameStockEmployees.add(new Employee("Oliver", "Jennings", "123ACB", "stogsheld", "pass123", false));
+    public void populateEmployees() {
+        emps.add(new Employee("Oliver", "Jennings", "123ACB", "stogsheld", "pass123", true));
+        emps.add(new Employee("Lionel", "Messi", "FCB", "messi9", "ball", false));
+        emps.add(new Employee("Alex", "Turner", "AM", "tranq", "base", false));
 
     }
 
@@ -21,14 +23,14 @@ public class Login {
         String username = new Scanner(System.in).nextLine();
         System.out.println("Please enter your password");
         String password = new Scanner(System.in).nextLine();
-        for (Employee e : gameStockEmployees) {
+        for (Employee e : emps) {
             if (e.getUsername().equalsIgnoreCase(username) && e.getPassword().equals(password)) {
                 if (e.isAdmin()) {
-                    new MainMenu(gameStockEmployees, e);
+                    new MainMenu(emps, e);
                 } else {
                     new MainMenu(new ArrayList<>(), e);
                 }
-            } else if (gameStockEmployees.indexOf(e) == gameStockEmployees.size()) {
+            } else if (emps.indexOf(e) == emps.size()) {
                 System.out.println("Invalid username and/or password, please try again.");
                 login();
             }

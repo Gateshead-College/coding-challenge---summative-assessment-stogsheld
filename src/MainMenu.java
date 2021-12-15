@@ -4,16 +4,16 @@ import java.util.Scanner;
 
 public class MainMenu {
 
-    private ArrayList<Employee> gameStockEmployees;
+    private ArrayList<Employee> emps;
     private Employee emp;
     ArrayList<Game> games = new ArrayList<>();
     Scanner scn = new Scanner(System.in);
 
-    public MainMenu(ArrayList<Employee> gameStockEmployees, Employee emp) {
-        this.gameStockEmployees = gameStockEmployees;
+    public MainMenu(ArrayList<Employee> emps, Employee emp) {
+        this.emps = emps;
         this.emp = emp;
         populateStock();
-        if (gameStockEmployees.isEmpty()) {
+        if (emps.isEmpty()) {
             mainMenu();
         } else {
             adminMenu();
@@ -21,8 +21,25 @@ public class MainMenu {
     }
 
     private void adminMenu() {
-        System.out.println("Admin menu incomplete, redirecting you to the user menu...");
-        mainMenu();
+        System.out.println("Welcome to GameStock's Stock System, admin " + emp.getForename() + ".");
+        System.out.println("Please select your option from the choices below.");
+        System.out.println("1 - View stock");
+        System.out.println("2 - Add Stock");
+        System.out.println("3 - Load previous stock data (NOT WORKING)");
+        System.out.println("4 - Save current stock data (NOT WORKING)");
+        System.out.println("5 - Account Settings");
+        System.out.println("6 - Exit");
+        int choice = Integer.parseInt(scn.nextLine());
+
+        switch (choice) {
+            case 1 -> displayGames();
+            case 2 -> addStock();
+            case 3 -> readData();           //These don't work yet - couldn't figure out how to read/write
+            case 4 -> writeData();          //These don't work yet - couldn't figure out how to read/write
+            case 5 -> adminSettings();
+            case 6 -> System.exit(0);
+            default -> System.out.println("Please select a valid option.");
+        }
         //Add admin options when task requires it
     }
 
@@ -58,7 +75,6 @@ public class MainMenu {
 
 
     //This is the beginning of the 'View Stock' option
-
     private void displayGames() {
         if (!games.isEmpty()) {
             int y = 1;
@@ -119,10 +135,10 @@ public class MainMenu {
         System.out.println("3 - Game Name");
         System.out.println("4 - Game Price");
         System.out.println("5 - Game Stock (Qty)");
-        newValue(i, Integer.parseInt(new Scanner(System.in).nextLine()));
+        newStockValue(i, Integer.parseInt(new Scanner(System.in).nextLine()));
     }
 
-    private void newValue(Game i, int x) {
+    private void newStockValue(Game i, int x) {
         switch (x) {
             case 1 -> updateGameID(i);
             case 2 -> updateManufacturer(i);
@@ -262,26 +278,42 @@ public class MainMenu {
     }
 
 
-    //User Settings menu
+    //Admin Settings menu
+    private void adminSettings() {
+        System.out.println("Welcome to admin settings. Please select an option below:");
+        System.out.println("1 - Change Password");
+        System.out.println("2 - View users");
+        System.out.println("3 - Main Menu");
+        int choice = Integer.parseInt(scn.nextLine());
+        switch (choice) {
+            case 1 -> changePassword();
+            case 2 -> viewUsers();
+            case 3 -> mainMenu();
+            default -> {
+                System.out.println("Invalid option, please try again");
+                adminSettings();
+            }
+        }
+    }
+
+
+    //User settings menu
     private void userSettings() {
         System.out.println("Welcome to user settings. Please select an option below:");
         System.out.println("1 - Change Password");
         System.out.println("2 - Main Menu");
         int choice = Integer.parseInt(scn.nextLine());
         switch (choice) {
-            case 1:
-                changePassword();
-                break;
-            case 2:
-                mainMenu();
-                break;
-            default:
+            case 1 -> changePassword();
+            case 2 -> mainMenu();
+            default -> {
                 System.out.println("Invalid option, please try again");
                 userSettings();
-                break;
+            }
         }
     }
-    
+
+
     private void changePassword() {
         System.out.println("Please enter your new password.");
         String newPass = new Scanner(System.in).nextLine();
@@ -290,11 +322,159 @@ public class MainMenu {
         if (Objects.equals(newPass, newPassConfirm)) {
             emp.setPassword(newPass);
             System.out.println("Your password has now been updated.");
-            userSettings();
+            if (emp.isAdmin()) {
+                adminSettings();
+            } else userSettings();
         } else {
             System.out.println("Passwords do not match; try again.");
             changePassword();
         }
     }
 
+
+    private void viewUsers() {
+        if (!emps.isEmpty()) {
+            int y = 1;
+            System.out.println("Select the employee you would like to view.");
+            for (Employee e : emps) {
+                System.out.println(y + " -> Name: " + e.getForename());
+                y++;
+            }
+            System.out.println(y + " -> Return to main menu");
+            int choice = Integer.parseInt(new Scanner(System.in).nextLine());
+            if (choice <= emps.size()) {
+                empsEditMenu(choice);
+            }
+        }
+        mainMenu();
+    }
+
+    private void empsEditMenu(int choice) {
+        Employee e = emps.get(choice - 1);
+        System.out.println("You are now viewing " + e.getForename() + " " + e.getSurname());
+        System.out.println("Please select an option from below:");
+        System.out.println("1 - Edit User Details");
+        System.out.println("2 - Go back");
+        handleChoice(e, Integer.parseInt(new Scanner(System.in).nextLine()));
+    }
+
+    private void handleChoice(Employee e, int choice) {
+        switch (choice) {
+            case 1 -> editUserDetails(e);
+            case 2 -> adminSettings();
+            default -> System.out.println("Invalid option provided, please try again");
+        }
+    }
+
+
+    private void editUserDetails(Employee e) {
+        System.out.println("Which field would you like to amend?");
+        System.out.println("1 - Forename");
+        System.out.println("2 - Surname");
+        System.out.println("3 - Password");
+        System.out.println("4 - Department");
+        System.out.println("5 - Service");
+        newUserValue(e, Integer.parseInt(new Scanner(System.in).nextLine()));
+    }
+
+    private void newUserValue(Employee e, int x) {
+        switch (x) {
+            case 1 -> updateUserForename(e);
+            case 2 -> updateUserSurname(e);
+            case 3 -> updateUserID(e);
+            case 4 -> updateUserUsername(e);
+            case 5 -> updateUserPass(e);
+            default -> System.out.println("Invalid option, please try again.");
+        }
+    }
+
+    private void updateUserForename(Employee e) {
+        System.out.println("The current value is " + e.getForename());
+        System.out.println("Please enter the new value.");
+        String newUserF = new Scanner(System.in).nextLine();
+        System.out.println("Are you sure you want to replace " + e.getForename() + " with " + newUserF + "?");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            e.setForename(newUserF);
+        }
+        System.out.println("Forename has now been updated to " + newUserF);
+        System.out.println("Would you like to edit more user details? (yes/no)");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            editUserDetails(e);
+        } else {
+            System.out.println("Returning you to the user menu");
+            viewUsers();
+        }
+    }
+
+    private void updateUserSurname(Employee e) {
+        System.out.println("The current value is " + e.getSurname());
+        System.out.println("Please enter the new value.");
+        String newUserS = new Scanner(System.in).nextLine();
+        System.out.println("Are you sure you want to replace " + e.getSurname() + " with " + newUserS + "?");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            e.setSurname(newUserS);
+        }
+        System.out.println("Surname has now been updated to " + newUserS);
+        System.out.println("Would you like to edit more user details? (yes/no)");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            editUserDetails(e);
+        } else {
+            System.out.println("Returning you to the user menu");
+            viewUsers();
+        }
+    }
+
+    private void updateUserID(Employee e) {
+        System.out.println("The current value is " + e.getUserID());
+        System.out.println("Please enter the new value.");
+        String newUserID = new Scanner(System.in).nextLine();
+        System.out.println("Are you sure you want to replace " + e.getUserID() + " with " + newUserID + "?");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            e.setUserID(newUserID);
+        }
+        System.out.println("User ID has now been updated to " + newUserID);
+        System.out.println("Would you like to edit more user details? (yes/no)");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            editUserDetails(e);
+        } else {
+            System.out.println("Returning you to the user menu");
+            viewUsers();
+        }
+    }
+
+    private void updateUserUsername(Employee e) {
+        System.out.println("The current value is " + e.getUsername());
+        System.out.println("Please enter the new value.");
+        String newUserU = new Scanner(System.in).nextLine();
+        System.out.println("Are you sure you want to replace " + e.getUsername() + " with " + newUserU + "?");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            e.setUsername(newUserU);
+        }
+        System.out.println("Username has now been updated to " + newUserU);
+        System.out.println("Would you like to edit more user details? (yes/no)");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            editUserDetails(e);
+        } else {
+            System.out.println("Returning you to the user menu");
+            viewUsers();
+        }
+    }
+
+    private void updateUserPass(Employee e) {
+        System.out.println("The current value is " + e.getPassword());
+        System.out.println("Please enter the new value.");
+        String newUserP = new Scanner(System.in).nextLine();
+        System.out.println("Are you sure you want to replace " + e.getUsername() + " with " + newUserP + "?");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            e.setPassword(newUserP);
+        }
+        System.out.println("Username has now been updated to " + newUserP);
+        System.out.println("Would you like to edit more user details? (yes/no)");
+        if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
+            editUserDetails(e);
+        } else {
+            System.out.println("Returning you to the user menu");
+            viewUsers();
+        }
+    }
 }
