@@ -7,17 +7,32 @@ public class MainMenu {
     private ArrayList<Employee> emps;
     private Employee emp;
     ArrayList<Game> games = new ArrayList<>();
+    ArrayList<Customer> customer = new ArrayList<>();
     Scanner scn = new Scanner(System.in);
 
     public MainMenu(ArrayList<Employee> emps, Employee emp) {
         this.emps = emps;
         this.emp = emp;
         populateStock();
+        populateCustomers();
         if (emps.isEmpty()) {
             mainMenu();
         } else {
             adminMenu();
         }
+    }
+
+    private void populateCustomers() {
+        customer.add(new Customer("Alan inc.", 123456, "alan@hotmail.com", "0191 1234567", "123 Fake Street"));
+        customer.add(new Customer("Gamers Ltd.", 45671, "gamers@steam.com", "0191 4821369", "12 Steam Avenue"));
+        customer.add(new Customer("Tyler1", 1, "lol@tyler1.com", "01661 1234564", "1 Alpha Street"));
+    }
+
+
+    private void populateStock() {
+        games.add(new Game(121, "Bungie", "Halo Reach", 49.99, 10));
+        games.add(new Game(124, "Mojang", "Minecraft", 20.00, 3));
+        games.add(new Game(687, "Riot Games", "League of Legends", 0, 100));
     }
 
     private void adminMenu() {
@@ -40,13 +55,6 @@ public class MainMenu {
             case 6 -> System.exit(0);
             default -> System.out.println("Please select a valid option.");
         }
-    }
-
-    private void populateStock() {
-        games.add(new Game(121, "Bungie", "Halo Reach", 49.99, 10));
-        games.add(new Game(124, "Mojang", "Minecraft", 20.00, 3));
-        games.add(new Game(687, "Riot Games", "League of Legends", 0, 100));
-
     }
 
     private void mainMenu() {
