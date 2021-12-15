@@ -40,7 +40,6 @@ public class MainMenu {
             case 6 -> System.exit(0);
             default -> System.out.println("Please select a valid option.");
         }
-        //Add admin options when task requires it
     }
 
     private void populateStock() {

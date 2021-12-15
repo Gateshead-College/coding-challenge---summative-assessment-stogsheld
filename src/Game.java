@@ -1,10 +1,11 @@
 public class Game {
 
-    private int ID;
+    public int ID;
+    public int quantity;
     private String gameManufacturer;
     private String gameName;
     private double gamePrice;
-    private int quantity;
+
 
     public Game(int ID, String gameManufacturer, String gameName, double gamePrice, int quantity) {
         this.ID = ID;
