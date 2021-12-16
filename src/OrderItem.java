@@ -1,10 +1,12 @@
 public class OrderItem {
 
-    private int orderID;
+    private String orderID;
     private int orderQuantity;
+    private String customerID;
 
-    public OrderItem(int orderID, int orderQuantity) {
+    public OrderItem(String orderID, int orderQuantity, String customerID) {
         this.orderID = orderID;
         this.orderQuantity = orderQuantity;
+        this.customerID = customerID;
     }
 }

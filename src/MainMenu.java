@@ -1,13 +1,26 @@
+import jdk.swing.interop.SwingInterOpUtils;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
 public class MainMenu {
 
-    private ArrayList<Employee> emps;
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
+    ArrayList<Employee> emps;
     private Employee emp;
     ArrayList<Game> games = new ArrayList<>();
     ArrayList<Customer> customer = new ArrayList<>();
+    ArrayList<OrderItem> orders = new ArrayList<>();
     Scanner scn = new Scanner(System.in);
 
     public MainMenu(ArrayList<Employee> emps, Employee emp) {
@@ -15,35 +28,38 @@ public class MainMenu {
         this.emp = emp;
         populateStock();
         populateCustomers();
-        if (emps.isEmpty()) {
-            mainMenu();
-        } else {
+        if (emp.isAdmin()) {
             adminMenu();
+        } else {
+            mainMenu();
         }
     }
 
     private void populateCustomers() {
-        customer.add(new Customer("Alan inc.", 123456, "alan@hotmail.com", "0191 1234567", "123 Fake Street"));
-        customer.add(new Customer("Gamers Ltd.", 45671, "gamers@steam.com", "0191 4821369", "12 Steam Avenue"));
-        customer.add(new Customer("Tyler1", 1, "lol@tyler1.com", "01661 1234564", "1 Alpha Street"));
+        customer.add(new Customer("Alan inc.", 1, "alan@hotmail.com", "0191 1234567", "123 Fake Street"));
+        customer.add(new Customer("Gamers Ltd.", 2, "gamers@steam.com", "0191 4821369", "12 Steam Avenue"));
+        customer.add(new Customer("Tyler1", 3, "lol@tyler1.com", "01661 1234564", "1 Alpha Street"));
     }
 
 
     private void populateStock() {
-        games.add(new Game(121, "Bungie", "Halo Reach", 49.99, 10));
-        games.add(new Game(124, "Mojang", "Minecraft", 20.00, 3));
-        games.add(new Game(687, "Riot Games", "League of Legends", 0, 100));
+        games.add(new Game(101, "Bungie", "Halo Reach", 49.99, 10));
+        games.add(new Game(102, "Mojang", "Minecraft", 20.00, 3));
+        games.add(new Game(103, "Riot Games", "League of Legends", 10.99, 100));
     }
 
     private void adminMenu() {
-        System.out.println("Welcome to GameStock's Stock System, admin " + emp.getForename() + ".");
+        System.out.println(ANSI_PURPLE + "---------------------------------------------------------------------" + ANSI_RESET);
+        System.out.println("Welcome to GameStock's Stock System, admin " + ANSI_CYAN + emp.getForename() + ANSI_RESET + ".");
+        System.out.println(ANSI_PURPLE + "---------------------------------------------------------------------" + ANSI_RESET);
         System.out.println("Please select your option from the choices below.");
         System.out.println("1 - View stock");
         System.out.println("2 - Add Stock");
         System.out.println("3 - Load previous stock data (NOT WORKING)");
         System.out.println("4 - Save current stock data (NOT WORKING)");
-        System.out.println("5 - Account Settings");
-        System.out.println("6 - Exit");
+        System.out.println("5 - View/Edit Orders");
+        System.out.println("6 - Account Settings");
+        System.out.println("7 - Exit");
         int choice = Integer.parseInt(scn.nextLine());
 
         switch (choice) {
@@ -51,21 +67,26 @@ public class MainMenu {
             case 2 -> addStock();
             case 3 -> readData();           //These don't work yet - couldn't figure out how to read/write
             case 4 -> writeData();          //These don't work yet - couldn't figure out how to read/write
-            case 5 -> adminSettings();
-            case 6 -> System.exit(0);
+            case 5 -> ordersMenu();
+            case 6 -> userSettings();
+            case 7 -> System.exit(0);
             default -> System.out.println("Please select a valid option.");
         }
+        adminMenu();
     }
 
     private void mainMenu() {
-        System.out.println("Welcome to GameStock's Stock System, " + emp.getForename() + ".");
+        System.out.println(ANSI_PURPLE + "---------------------------------------------------------------------" + ANSI_RESET);
+        System.out.println("Welcome to GameStock's Stock System, " + ANSI_CYAN + emp.getForename() + ANSI_RESET + ".");
+        System.out.println(ANSI_PURPLE + "---------------------------------------------------------------------" + ANSI_RESET);
         System.out.println("Please select your option from the choices below.");
         System.out.println("1 - View stock");
         System.out.println("2 - Add Stock");
         System.out.println("3 - Load previous stock data (NOT WORKING)");
         System.out.println("4 - Save current stock data (NOT WORKING)");
-        System.out.println("5 - Account Settings");
-        System.out.println("6 - Exit");
+        System.out.println("5 - View/Edit Orders");
+        System.out.println("6 - Account Settings");
+        System.out.println("7 - Exit");
         int choice = Integer.parseInt(scn.nextLine());
 
         switch (choice) {
@@ -73,12 +94,38 @@ public class MainMenu {
             case 2 -> addStock();
             case 3 -> readData();           //These don't work yet - couldn't figure out how to read/write
             case 4 -> writeData();          //These don't work yet - couldn't figure out how to read/write
-            case 5 -> userSettings();
-            case 6 -> System.exit(0);
+            case 5 -> ordersMenu();
+            case 6 -> userSettings();
+            case 7 -> System.exit(0);
             default -> System.out.println("Please select a valid option.");
         }
         mainMenu();
     }
+
+    private void ordersMenu() {
+        System.out.println();
+        System.out.println("Welcome to the orders menu.");
+        System.out.println("1 - View existing orders");
+        System.out.println("2 - Add new orders");
+        int choice = Integer.parseInt(scn.nextLine());
+
+        switch (choice) {
+            case 1 -> viewOrders();
+            case 2 -> addOrders();
+            default -> System.out.println("Invalid option, please try again");
+        }
+        ordersMenu();
+    }
+
+    private void viewOrders() {
+        //Add order viewer here
+    }
+
+
+    private void addOrders() {
+        //Add customer orders here
+    }
+
 
 
     //This is the beginning of the 'View Stock' option
@@ -87,7 +134,7 @@ public class MainMenu {
             int y = 1;
             System.out.println("Select the game you would like to view.");
             for (Game i : games) {
-                System.out.println(y + " -> ID: " + i.getID() + " - Manufacturer: " + i.getGameManufacturer() + " - Name: " + i.getGameName() + " - Price: £" + i.getGamePrice() + " - Stock: " + i.getQuantity());
+                System.out.println(y + " -> ID: " + " - Manufacturer: " + i.getGameManufacturer() + " - Name: " + i.getGameName() + " - Price: £" + i.getGamePrice() + " - Stock: " + i.getQuantity());
                 y++;
             }
             System.out.println(y + " -> Return to main menu");
@@ -96,12 +143,17 @@ public class MainMenu {
                 gamesEditMenu(choice);
             }
         }
-        mainMenu();
+        System.out.println("No games added yet, please add a game.");
+        if (emp.isAdmin()) {
+            adminMenu();
+        } else {
+            mainMenu();
+        }
     }
 
     private void gamesEditMenu(int choice) {
         Game i = games.get(choice - 1);
-        System.out.println("You are now viewing " + i.getGameName());
+        System.out.println("You are now viewing " + i.getGameName() + ".");
         System.out.println("Please select an option from below:");
         System.out.println("1 - Edit Game Details");
         System.out.println("2 - Delete Game Details");
@@ -269,10 +321,13 @@ public class MainMenu {
         System.out.println("Your game has now been added. Would you like to add another?");
         if (new Scanner(System.in).nextLine().equalsIgnoreCase("yes")) {
             addStock();
+        } else if (emp.isAdmin()) {
+            adminMenu();
         } else {
             mainMenu();
         }
     }
+
 
 
     //Reading and writing data - these don't work yet
@@ -295,7 +350,7 @@ public class MainMenu {
         switch (choice) {
             case 1 -> changePassword();
             case 2 -> viewUsers();
-            case 3 -> mainMenu();
+            case 3 -> adminMenu();
             default -> {
                 System.out.println("Invalid option, please try again");
                 adminSettings();
@@ -353,7 +408,7 @@ public class MainMenu {
                 empsEditMenu(choice);
             }
         }
-        mainMenu();
+        adminMenu();
     }
 
     private void empsEditMenu(int choice) {
