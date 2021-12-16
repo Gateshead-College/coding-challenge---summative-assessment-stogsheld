@@ -134,7 +134,7 @@ public class MainMenu {
             int y = 1;
             System.out.println("Select the game you would like to view.");
             for (Game i : games) {
-                System.out.println(y + " -> ID: " + " - Manufacturer: " + i.getGameManufacturer() + " - Name: " + i.getGameName() + " - Price: £" + i.getGamePrice() + " - Stock: " + i.getQuantity());
+                System.out.println(y + " -> ID:" + i.getID() + " - Manufacturer: " + i.getGameManufacturer() + " - Name: " + i.getGameName() + " - Price: £" + i.getGamePrice() + " - Stock: " + i.getQuantity());
                 y++;
             }
             System.out.println(y + " -> Return to main menu");
